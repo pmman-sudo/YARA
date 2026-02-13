@@ -64,11 +64,14 @@ I executed the Loki scanner against the directory containing file1 (ind3x.php).
 
 * Findings: Loki flagged the file as Suspicious with a score of 70.
 
+<img width="624" height="472" alt="image" src="https://github.com/user-attachments/assets/e6de14f1-b644-49a9-97f7-37470662597f" />
 
+<img width="624" height="472" alt="image" src="https://github.com/user-attachments/assets/02d99b9d-ce29-4dd5-b1d9-2dadf2c3f4f1" />
 
 
 * Signature Match: The file matched the YARA rule webshell_metaslsoft.
 
+<img width="624" height="472" alt="image" src="https://github.com/user-attachments/assets/5ed1194d-bc89-491b-ad28-b4cd1730bba6" />
 
 
 * Classification: Loki classified this object specifically as a Web Shell.
@@ -89,6 +92,7 @@ I proceeded to scan file2 (1ndex.php) using the same parameters.
 
 * Findings: The system returned a "clean" result. Loki did not detect any suspicious or malicious evidence based on its default signature set.
 
+<img width="624" height="395" alt="image" src="https://github.com/user-attachments/assets/909b198b-b520-43f0-b34b-4cb3edfe0614" />
 
 
 * Conclusion: This indicated a potential false negative or a newer variant of malware not yet covered by the standard signature base, requiring manual intervention.
@@ -98,13 +102,14 @@ To address the detection gap for file2, I moved to manual inspection and custom 
 
 # Step 2.1: Manual File Inspection
 I manually inspected file2 using the nano editor to understand its behavior and origin.
--Observation: The file header clearly displayed detection evasion attempts but identified itself as b374k shell version 3.2.3.
+* Observation: The file header clearly displayed detection evasion attempts but identified itself as b374k shell version 3.2.3.
 
 
 <img width="780" height="674" alt="image" src="https://github.com/user-attachments/assets/2ee3de1f-2f14-4329-b7d1-bafed1bf24e0" />
 
 
 * Assessment: Despite being a known tool, the version difference (3.2.3 vs. the 2.2 found in file1) likely caused the signature mismatch.
+   
 # Step 2.2: Generating Rules with yarGen
 To automate the creation of a detection rule for this specific variant, I utilized yarGen, a tool that generates YARA rules by identifying unique strings in a file while filtering out common legitimate strings.
 * Action: I generated a rule specifically for file2.
@@ -119,8 +124,7 @@ To automate the creation of a detection rule for this specific variant, I utiliz
 
 * Rule Analysis: Inspecting the generated file2.yar, I noted that It relied on 20 specific strings to identify the file. It included a specific variable named Zepto in the string mal of How It set a file size condition, specifying the file must be < 700KB
 
-
-<img width="780" height="109" alt="image" src="https://github.com/user-attachments/assets/1f7727e6-26d3-4946-88a8-e789d4968dc3" />
+<img width="624" height="535" alt="image" src="https://github.com/user-attachments/assets/24e80cf7-159b-4eff-a824-64a6c2af2598" />
 
 
 
@@ -137,27 +141,26 @@ To gain broader context on the identified threats, I leveraged Valhalla, a YARA 
 # Step 3.1: File 1 Intelligence (SHA256 Analysis) 
 I submitted the SHA256 hash of file1 to Valhalla.
 
-<img width="780" height="582" alt="image" src="https://github.com/user-attachments/assets/d733e9e9-3b27-410b-8d55-657bc46d4703" />
+<img width="624" height="87" alt="image" src="https://github.com/user-attachments/assets/0ebacd5f-8702-45df-8234-1f1b243b758a" />
 
-
-
+<img width="624" height="466" alt="image" src="https://github.com/user-attachments/assets/d66cee8e-2799-46de-8dac-0dbbd4d91c04" />
 
 * Attribution: The analysis confirmed the file is attributed to an APT (Advanced Persistent Threat) group.
 
-<img width="780" height="115" alt="image" src="https://github.com/user-attachments/assets/a7979f37-1b66-45f6-94ef-444cfd3cfaad" />
+<img width="624" height="458" alt="image" src="https://github.com/user-attachments/assets/6a48b8ce-715b-402e-9154-e7eb9a56ce18" />
 
 
 * Validation: This confirmed the severity of the initial Loki detection.
-Step 3.2: File 2 Intelligence
+# Step 3.2: File 2 Intelligence
 I performed a similar lookup for the SHA256 hash of file2.
 
+<img width="624" height="92" alt="image" src="https://github.com/user-attachments/assets/e7245e3b-1671-4287-9b7b-dddd255df390" />
 
-<img width="780" height="572" alt="image" src="https://github.com/user-attachments/assets/e28cf23e-c7ca-4a88-9d69-b3d5972598c2" />
-
-
+<img width="624" height="518" alt="image" src="https://github.com/user-attachments/assets/ff84705c-d3f9-47e8-bad9-a0ae0181e38d" />
 
 * Existing Rules: Valhalla revealed an existing rule named Webshell_b374k_rule1 that covers this file.
 
+<img width="624" height="360" alt="image" src="https://github.com/user-attachments/assets/757f8de6-f82d-488c-93c3-ef72538ad6f3" />
 
 
 * Source: The signature match originated from the THOR APT Scanner.
@@ -177,9 +180,9 @@ A cross-reference with VirusTotal showed that not all antivirus engines detected
 Finally, I checked if the effective rule (Webshell_b374k_rule1) was present in the default Loki YARA set I used in Phase signatures 1. 
 -Finding: The rule was not present in the default set because there was no response. 
 
-![Uploading image.png…]()
+<img width="624" height="186" alt="image" src="https://github.com/user-attachments/assets/ff2d82cb-087a-4a28-a5c4-6e042691002c" />
 
  
 # Summary: 
-I successfully authored and deployed a functional YARA rule to patch a detection gap in the Loki scanner. In this project, I demonstrated the limitations of automated detection by identifying a b374k web shell variant that bypassed the Loki scanner. I manually analyzed the malware, generated a custom YARA rule using yarGen to bridge the detection gap, and validated the threat against Valhalla intelligence. This exercise highlights my ability to engineer custom detection logic and attribute threats when standard  fail
+In this engagement, I successfully conducted a forensic analysis of a suspicious directory containing potential web shells. Using the Loki IOC scanner, I performed an initial sweep to identify known threats. Upon discovering a file that bypassed standard signatures, I manually inspected the code, utilized yarGen to create a custom YARA rule, and successfully integrated this rule into the detection pipeline. Finally, I utilized the Valhalla YARA feed to correlate file hashes with known APT groups and threat actors. This exercise highlights my ability to engineer custom detection logic and attribute threats when standard  fail
 
